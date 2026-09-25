@@ -1,5 +1,7 @@
 # New Relic Free — Setup untuk Lab APM
 
+> Di learning platform, langkah lengkap pra-lab (Docker + clone + New Relic) ada di **modul 0.1**. Dokumen ini fokus detail akun & license key New Relic.
+
 ## 1. Buat akun
 
 1. Buka https://newrelic.com/signup
