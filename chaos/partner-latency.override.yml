@@ -1,0 +1,7 @@
+# Chaos B: latency lambat ke partner (bank-svc)
+services:
+  bank-svc:
+    environment:
+      CHAOS_LATENCY_MS: "3000"
+      CHAOS_ERROR_STATUS: "0"
+      CHAOS_ERROR_RATE: "0"

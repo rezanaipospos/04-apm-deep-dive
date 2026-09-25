@@ -1,0 +1,7 @@
+# Chaos: payment-svc artificial latency 2000ms
+services:
+  payment-svc:
+    environment:
+      CHAOS_LATENCY_MS: "2000"
+      CHAOS_ERROR_STATUS: "0"
+      CHAOS_ERROR_RATE: "0"

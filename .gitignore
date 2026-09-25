@@ -1,0 +1,16 @@
+.env
+.env.alerting
+*.exe
+/bin/
+/tmp/
+apps/ticketing-ui/node_modules/
+apps/ticketing-ui/dist/
+
+# Alerting as Code — local Terraform/Terragrunt state (no cloud backend)
+alerting-as-code/.terragrunt-local-state/
+alerting-as-code/**/.terraform/
+alerting-as-code/**/.terragrunt-cache/
+alerting-as-code/**/backend.tf
+alerting-as-code/**/*.tfstate
+alerting-as-code/**/*.tfstate.*
+.DS_Store

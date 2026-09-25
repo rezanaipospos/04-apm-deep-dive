@@ -1,0 +1,7 @@
+# Chaos: cinema-svc returns HTTP 500
+services:
+  cinema-svc:
+    environment:
+      CHAOS_ERROR_STATUS: "500"
+      CHAOS_ERROR_RATE: "1"
+      CHAOS_LATENCY_MS: "0"

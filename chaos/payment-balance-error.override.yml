@@ -1,0 +1,8 @@
+# Chaos A: gagal load saldo GoPay (endpoint wallet saja)
+services:
+  payment-svc:
+    environment:
+      CHAOS_MATCH_PATH: "/api/wallet"
+      CHAOS_ERROR_STATUS: "500"
+      CHAOS_ERROR_RATE: "0"
+      CHAOS_LATENCY_MS: "0"

@@ -1,0 +1,121 @@
+services:
+  cinema-svc:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+      args:
+        SERVICE: cinema
+    environment:
+      ADDR: ":8081"
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_APP_NAME: cinema-svc
+      NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED: ${NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}
+      DEPLOY_ENV: lab
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8081:8081"
+
+  layout-svc:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+      args:
+        SERVICE: layout
+    environment:
+      ADDR: ":8082"
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_APP_NAME: layout-svc
+      NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED: ${NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}
+      DEPLOY_ENV: lab
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8082:8082"
+
+  checkout-svc:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+      args:
+        SERVICE: checkout
+    environment:
+      ADDR: ":8083"
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_APP_NAME: checkout-svc
+      NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED: ${NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}
+      PAYMENT_URL: http://payment-svc:8084
+      DEPLOY_ENV: lab
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8083:8083"
+    depends_on:
+      - payment-svc
+
+  payment-svc:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+      args:
+        SERVICE: payment
+    environment:
+      ADDR: ":8084"
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_APP_NAME: payment-svc
+      NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED: ${NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}
+      BANK_URL: http://bank-svc:8085
+      DEPLOY_ENV: lab
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8084:8084"
+    depends_on:
+      - bank-svc
+
+  bank-svc:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+      args:
+        SERVICE: bank
+    environment:
+      ADDR: ":8085"
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_APP_NAME: bank-svc
+      NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED: ${NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}
+      DEPLOY_ENV: lab
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "8085:8085"
+
+  ticketing-ui:
+    build:
+      context: ./apps/ticketing-ui
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - cinema-svc
+      - layout-svc
+      - checkout-svc
+      - payment-svc
+
+  # Automatic traffic so New Relic charts fill without clicking the UI.
+  # Stop: docker compose stop loadgen
+  # Tune: INTERVAL_SEC in .env (default 5)
+  loadgen:
+    image: curlimages/curl:8.11.1
+    depends_on:
+      - cinema-svc
+      - layout-svc
+      - checkout-svc
+      - payment-svc
+      - bank-svc
+    environment:
+      CINEMA_URL: http://cinema-svc:8081
+      LAYOUT_URL: http://layout-svc:8082
+      CHECKOUT_URL: http://checkout-svc:8083
+      PAYMENT_URL: http://payment-svc:8084
+      INTERVAL_SEC: ${LOADGEN_INTERVAL_SEC:-5}
+      LIGHT_EVERY: ${LOADGEN_LIGHT_EVERY:-2}
+    volumes:
+      - ./traffic/loadgen.sh:/scripts/loadgen.sh:ro
+    entrypoint: ["/bin/sh", "/scripts/loadgen.sh"]
+    restart: unless-stopped

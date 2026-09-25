@@ -1,0 +1,7 @@
+# Chaos: layout-svc returns HTTP 400 Bad Request
+services:
+  layout-svc:
+    environment:
+      CHAOS_ERROR_STATUS: "400"
+      CHAOS_ERROR_RATE: "1"
+      CHAOS_LATENCY_MS: "0"
