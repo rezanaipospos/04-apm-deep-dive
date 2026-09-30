@@ -18,7 +18,7 @@ variable "alert_muting_conditions" {
 }
 
 resource "newrelic_alert_muting_rule" "AlertMuting" {
-    account_id = 3944992
+    account_id = var.newrelic_account_id
     name = var.alert_muting_name
     enabled = var.alert_muting_enable
     description = var.alert_muting_desc

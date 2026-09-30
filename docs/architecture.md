@@ -15,7 +15,7 @@
 
 Setiap Go service menjalankan **New Relic Go agent** (`pkg/nragent`):
 
-- Web transactions via `nrchi` middleware
+- Web transactions via custom `nrMiddleware` (`pkg/httpserver`)
 - Datastore segments via `pkg/mockdb` (`db.system` product = Mock)
 - External segments via `newrelic.NewRoundTripper` (`pkg/nhttp`)
 - Function segments + `NoticeError` di block bisnis

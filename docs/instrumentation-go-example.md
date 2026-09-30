@@ -109,4 +109,4 @@ Setelah contoh di atas dipahami, buka lagi:
 
 - `payment-svc` — banyak `StartSegment` bisnis (Authorize, CheckGoPayBalance, …)
 - `checkout-svc` → `payment-svc` — External + distributed trace
-- Chaos `payment-500` — Errors + alert Phase 5
+- Chaos `payment-500` — Errors + alert Phase 4

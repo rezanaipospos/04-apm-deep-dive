@@ -84,7 +84,7 @@ New Relic Go agent mengirim golden signals APM secara native:
 - Apdex (T default lab **500ms**, via agent config)
 - Transaction traces + distributed tracing antar service
 
-## Alerting as Code (Phase 5)
+## Alerting as Code (Phase 4)
 
 Policy + NRQL conditions via **Terragrunt**:
 

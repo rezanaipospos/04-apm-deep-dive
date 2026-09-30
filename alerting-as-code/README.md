@@ -80,7 +80,7 @@ cd ../../../workflows/service-workflow
 terragrunt apply -auto-approve
 ```
 
-Tanpa Slack, policy + conditions saja sudah cukup untuk Phase 5 course.
+Tanpa Slack, policy + conditions saja sudah cukup untuk Phase 4 course.
 
 ## Trigger alert di lab
 
