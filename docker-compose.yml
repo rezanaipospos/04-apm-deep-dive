@@ -117,5 +117,6 @@ services:
       LIGHT_EVERY: ${LOADGEN_LIGHT_EVERY:-2}
     volumes:
       - ./traffic/loadgen.sh:/scripts/loadgen.sh:ro
-    entrypoint: ["/bin/sh", "/scripts/loadgen.sh"]
+    # Strip CR so a Windows (CRLF) checkout still runs under /bin/sh.
+    entrypoint: ["/bin/sh", "-c", "tr -d '\\r' < /scripts/loadgen.sh > /tmp/loadgen.sh && exec /bin/sh /tmp/loadgen.sh"]
     restart: unless-stopped
