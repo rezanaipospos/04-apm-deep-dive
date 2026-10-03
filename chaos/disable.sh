@@ -3,5 +3,5 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-docker compose up -d --force-recreate cinema-svc layout-svc checkout-svc payment-svc bank-svc
+docker compose up -d --force-recreate cinema-svc layout-svc checkout-svc payment-svc bank-svc ticketing-ui
 echo "OK: chaos disabled — happy flow restored."

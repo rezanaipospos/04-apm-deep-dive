@@ -29,7 +29,7 @@ curl -s -o /dev/null -w "%{http_code}\n" "localhost:8084/api/wallet?customer=lab
 
 **Expected di New Relic**
 
-- `bank-svc` response time ~3s+
+- `bank-svc` response time ~30s+
 - Distributed trace: external span payment→bank memakan waktu
 - Segment `SimulatePaymentProcessing` + partner latency di waterfall
 - Apdex `bank-svc` / downstream `payment-svc` / `checkout-svc` turun

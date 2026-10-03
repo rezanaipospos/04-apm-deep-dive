@@ -67,12 +67,24 @@ curl -s -X POST localhost:8083/api/checkout \
 
 ```bash
 ./chaos/enable.sh payment-balance-error   # gagal load saldo
-./chaos/enable.sh partner-latency         # bank lambat ~3s
+./chaos/enable.sh partner-latency         # bank lambat ~30s
 ./chaos/enable.sh payment-500             # charge 500
+./chaos/enable.sh cinema-500              # daftar film 500 (SLO browse, Phase 5)
 ./chaos/disable.sh
 ```
 
 Lihat `docs/troubleshooting.md`.
+
+## Capstone — Mystery Incident (Phase 6)
+
+```bash
+./chaos/mystery.sh            # incident acak (skenario rahasia)
+./chaos/mystery.sh hint       # petunjuk bertahap
+./chaos/mystery.sh reveal     # jawaban
+./chaos/mystery.sh resolve    # pulihkan + waktu untuk postmortem
+```
+
+Tulis postmortem dengan `docs/postmortem-template.md` (contoh: `docs/postmortem-example-payment-500.md`).
 
 Di New Relic: **APM & Services** → cari `cinema-svc`, `layout-svc`, `checkout-svc`, `payment-svc`, `bank-svc`. Buka satu transaction / distributed trace checkout — harus terlihat segment HTTP, **Datastore (Mock)**, external bank, dan function segments (`AuthorizePayment`, `SimulatePaymentProcessing`, dll.).
 

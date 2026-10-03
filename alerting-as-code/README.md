@@ -36,10 +36,16 @@ alerting-as-code/
 │   ├── alert-policy/
 │   ├── alert-condition/nrql/
 │   ├── alert-channel/
-│   └── alert-workflow/
+│   ├── alert-workflow/
+│   ├── workload/               # Phase 5 — kelompok service per user journey
+│   └── service-level/          # Phase 5 — SLI + SLO
 └── newrelic/a-commons/         # stack lab ticketing
     ├── policies/service-anomaly/
-    ├── conditions/service/{apdex,responsecode-500,healtcheck,level-error}/
+    ├── policies/slo-burn-rate/        # Phase 5
+    ├── conditions/service/{apdex,responsecode-500,healtcheck,level-error,external-latency}/
+    ├── conditions/slo/                # Phase 5 — burn rate alerts
+    ├── workloads/{checkout-journey,browse-journey}/              # Phase 5
+    ├── service-levels/{checkout,browse}-{availability,latency}/  # Phase 5
     ├── channels/slack/911-incident/   # opsional
     └── workflows/service-workflow/    # opsional
 ```
@@ -64,9 +70,20 @@ terragrunt apply -auto-approve
 
 cd ../level-error
 terragrunt apply -auto-approve
+
+cd ../external-latency
+terragrunt apply -auto-approve
 ```
 
-Verifikasi di New Relic UI: **Alerts & AI → Alert Conditions / Policies** — policy **Ticketing Lab — Service Anomaly** + 4 conditions.
+Verifikasi di New Relic UI: **Alerts & AI → Alert Conditions / Policies** — policy **Ticketing Lab — Service Anomaly** + 5 conditions.
+
+| Condition | Skenario chaos (modul 3.1) |
+|---|---|
+| Too Many Response Code 500 (facet service + endpoint) | A `payment-balance-error`, C `payment-500` |
+| Slow External Call | B `partner-latency` |
+| Low Apdex | B (dan ikut di A/C karena error = frustrated) |
+| Too Many Error Logs | A, C |
+| Microservice Down (Zero Throughput) | `docker compose stop <svc>` |
 
 ## Slack + workflow (opsional)
 
@@ -91,9 +108,39 @@ cd 04-apm-deep-dive
 ./chaos/disable.sh
 ```
 
+## SLO as Code (Phase 5)
+
+Urutan apply: workload → service level → policy → burn rate conditions.
+
+```bash
+cd newrelic/a-commons/workloads/checkout-journey && terragrunt init && terragrunt apply -auto-approve
+cd ../browse-journey && terragrunt init && terragrunt apply -auto-approve
+
+cd ../../service-levels/checkout-availability && terragrunt init && terragrunt apply -auto-approve
+cd ../checkout-latency && terragrunt init && terragrunt apply -auto-approve
+cd ../browse-availability && terragrunt init && terragrunt apply -auto-approve
+cd ../browse-latency && terragrunt init && terragrunt apply -auto-approve
+
+cd ../../policies/slo-burn-rate && terragrunt init && terragrunt apply -auto-approve
+
+cd ../../conditions/slo/checkout-availability-fast-burn && terragrunt init && terragrunt apply -auto-approve
+cd ../checkout-availability-slow-burn && terragrunt init && terragrunt apply -auto-approve
+cd ../checkout-latency-fast-burn && terragrunt init && terragrunt apply -auto-approve
+cd ../browse-availability-fast-burn && terragrunt init && terragrunt apply -auto-approve
+```
+
+| SLI (target, 28 hari) | Burn rate alert | Skenario chaos |
+|---|---|---|
+| Checkout — Availability (99.5%) | fast (1 jam, 13.44x) + slow (6 jam, 5.6x) | `payment-500` |
+| Checkout — Latency < 3s (99%) | fast | `partner-latency` |
+| Browse Film & Kursi — Availability (99.9%) | fast | `cinema-500` |
+| Browse Film & Kursi — Latency < 500ms (99%) | — (latihan mandiri) | — |
+
+Threshold = `(100 − target) × burn rate`, dihitung otomatis dari output service level.
+
 ## Destroy
 
-Jalankan `terragrunt destroy -auto-approve` dari tiap folder yang pernah di-apply (conditions → policy; workflow → channel), atau hapus resource di NR UI.
+Jalankan `terragrunt destroy -auto-approve` dari tiap folder yang pernah di-apply (conditions → policy; workflow → channel), atau hapus resource di NR UI. Untuk Phase 5: conditions/slo → policies/slo-burn-rate → service-levels → workloads.
 
 ## Catatan
 

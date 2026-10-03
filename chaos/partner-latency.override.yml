@@ -2,6 +2,6 @@
 services:
   bank-svc:
     environment:
-      CHAOS_LATENCY_MS: "3000"
+      CHAOS_LATENCY_MS: "30000"
       CHAOS_ERROR_STATUS: "0"
       CHAOS_ERROR_RATE: "0"

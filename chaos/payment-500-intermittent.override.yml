@@ -1,0 +1,8 @@
+# Mystery: payment charge HTTP 500 sesekali (5%)
+services:
+  payment-svc:
+    environment:
+      CHAOS_MATCH_PATH: "/api/payments"
+      CHAOS_ERROR_STATUS: "500"
+      CHAOS_ERROR_RATE: "0.05"
+      CHAOS_LATENCY_MS: "0"

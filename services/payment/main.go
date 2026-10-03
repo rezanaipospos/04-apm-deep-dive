@@ -261,7 +261,7 @@ func callBank(ctx context.Context, payload map[string]any) (string, error) {
 		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	res, err := nhttp.Client(15 * time.Second).Do(req)
+	res, err := nhttp.Client(45 * time.Second).Do(req)
 	if err != nil {
 		return "", err
 	}

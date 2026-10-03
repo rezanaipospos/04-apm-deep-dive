@@ -3,6 +3,7 @@
 *.exe
 /bin/
 /tmp/
+chaos/.mystery-state
 apps/ticketing-ui/node_modules/
 apps/ticketing-ui/dist/
 

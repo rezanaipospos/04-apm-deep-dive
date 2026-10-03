@@ -176,7 +176,7 @@ func callPayment(ctx context.Context, txID string, amount int, method, customer 
 		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	res, err := nhttp.Client(20 * time.Second).Do(req)
+	res, err := nhttp.Client(60 * time.Second).Do(req)
 	if err != nil {
 		return "", err
 	}

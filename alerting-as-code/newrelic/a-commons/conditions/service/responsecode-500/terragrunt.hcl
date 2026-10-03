@@ -17,12 +17,15 @@ inputs = {
   alert_conditions_enable             = true
   alert_conditions_desc               = <<-EOF
     *What to Do:*
-    1. Buka Errors / TransactionError di New Relic
-    2. Untuk lab: ./chaos/enable.sh payment-500
+    1. Lihat facet alert: service + endpoint mana yang membalas 500
+    2. Buka Errors Inbox → error group 500 → occurrence + log + distributed trace
+    3. Cocokkan waktu lonjakan dengan deployment terakhir (rollback jika perlu)
+    4. Untuk lab: ./chaos/enable.sh payment-balance-error (/api/wallet) atau payment-500 (/api/payments)
   EOF
   alert_conditions_runbook_url = "#"
-  alert_conditions_query       = <<-EOF
-    FROM TransactionError SELECT count(*) WHERE error.class = '500' FACET appName
+  # FACET transactionUiName → alert langsung menyebut endpoint (mis. "GET /api/wallet").
+  alert_conditions_query = <<-EOF
+    FROM TransactionError SELECT count(*) WHERE error.class = '500' FACET appName, transactionUiName
   EOF
 
   alert_conditions_critical = {
