@@ -6,6 +6,9 @@ locals {
 #   export NEW_RELIC_ACCOUNT_ID=1234567
 #   export NEW_RELIC_USER_API_KEY=NRAK-xxxxxxxx   # User key (bukan ingest license)
 #   export NEW_RELIC_REGION=US                    # atau EU
+#
+# PENTING: jangan biarkan TF_VAR_newrelic_* tertinggal di shell (mis. dari session
+# kantor). TF_VAR_* menimpa inputs Terragrunt. Cek: env | grep TF_VAR_newrelic
 inputs = {
   env_name                   = local.env_name
   newrelic_account_id        = tonumber(get_env("NEW_RELIC_ACCOUNT_ID", "0"))
