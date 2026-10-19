@@ -31,7 +31,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-UI: http://localhost:8080  
+UI: http://localhost:8080
 
 **Traffic otomatis:** service `loadgen` langsung jalan (loop film → layout → wallet → checkout). Tidak perlu klik UI agar chart New Relic terisi.
 
@@ -123,7 +123,7 @@ set -a && source .env.alerting && set +a
 └── docs/
 ```
 
-Logging & correlation: lihat `docs/logging.md`.  
+Logging & correlation: lihat `docs/logging.md`.
 Contoh instrumentasi lengkap (metrics + segments) untuk ditiru di kode Anda: `docs/instrumentation-go-example.md` (Modul 2.4 di platform).
 
 ## Teardown

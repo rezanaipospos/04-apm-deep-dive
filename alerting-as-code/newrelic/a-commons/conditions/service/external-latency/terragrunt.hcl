@@ -34,7 +34,7 @@ inputs = {
 
   alert_conditions_warning = {
     operator              = "above"
-    threshold             = 3
+    threshold             = 90
     threshold_duration    = 120
     threshold_occurrences = "at_least_once"
   }
